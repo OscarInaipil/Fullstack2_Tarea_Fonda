@@ -1,7 +1,3 @@
--- Datos iniciales de la fonda.
--- Se cargan automaticamente al arrancar, despues de que JPA crea las tablas.
--- Ajusta los nombres de columna si tu entidad usa otros.
-
 INSERT INTO bebida (nombre, tipo, volumen_ml, stock, grados_alcohol, certificada, azucar_por_litro, venta_restringida)
 SELECT 'Chicha', 'ALCOHOLICA', 1000, 40, 12.0, false, NULL, true
 WHERE NOT EXISTS (SELECT 1 FROM bebida);

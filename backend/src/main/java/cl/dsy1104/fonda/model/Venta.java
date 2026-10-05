@@ -14,10 +14,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
-/**
- * Intento de venta, autorizado o rechazado.
- * Muchas ventas pueden apuntar a la misma bebida: relacion muchos a uno.
- */
 @Entity
 @Table(name = "venta")
 public class Venta {
@@ -26,7 +22,6 @@ public class Venta {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Crea la columna bebida_id con clave foranea hacia bebida(id).
     @ManyToOne(optional = false)
     @JoinColumn(name = "bebida_id", nullable = false)
     private Bebida bebida;
@@ -34,7 +29,6 @@ public class Venta {
     @Column(nullable = false)
     private Integer unidades;
 
-    /** Total cobrado. Es 0 cuando la venta se rechaza. */
     @Column(nullable = false)
     private Integer total;
 
@@ -42,7 +36,6 @@ public class Venta {
     @Column(nullable = false, length = 20)
     private EstadoVenta estado;
 
-    /** Solo se llena cuando la venta se rechaza. */
     @Enumerated(EnumType.STRING)
     @Column(length = 30)
     private MotivoRechazo motivoRechazo;
@@ -53,7 +46,6 @@ public class Venta {
     @Column(nullable = false)
     private LocalDateTime fecha;
 
-    /** JPA necesita un constructor sin argumentos. */
     protected Venta() {
     }
 

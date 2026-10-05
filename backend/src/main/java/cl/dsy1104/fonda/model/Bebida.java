@@ -9,18 +9,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
-/**
- * Bebida del catalogo de la fonda.
- *
- * Los atributos propios de cada tipo admiten null:
- *   - gradosAlcohol y certificada solo aplican a ALCOHOLICA.
- *   - azucarPorLitro solo aplica a SIN_ALCOHOL.
- */
 @Entity
 @Table(name = "bebida")
 public class Bebida {
 
-    // IDENTITY: la base genera el id. Asi no choca con las filas que inserta data.sql.
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -28,12 +20,10 @@ public class Bebida {
     @Column(nullable = false, length = 80)
     private String nombre;
 
-    // STRING guarda "ALCOHOLICA" / "SIN_ALCOHOL" y no la posicion del enum (0, 1).
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private TipoBebida tipo;
 
-    // Sin el nombre explicito, Spring crearia la columna "volumenml" y data.sql usa "volumen_ml".
     @Column(name = "volumen_ml", nullable = false)
     private Integer volumenML;
 
