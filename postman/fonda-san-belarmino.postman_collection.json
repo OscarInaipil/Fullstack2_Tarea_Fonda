@@ -1,0 +1,42 @@
+{
+  "info": {
+    "name": "Fonda San Belarmino",
+    "description": "Pruebas de la API. Ejecutar en orden con los datos iniciales recien cargados (reinicia el backend con H2 para partir de cero).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [{ "key": "baseUrl", "value": "http://localhost:8080/api" }],
+  "item": [
+    { "name": "01 Listar bebidas (200)", "request": { "method": "GET", "url": "{{baseUrl}}/bebidas" } },
+    { "name": "02 Filtrar por nombre Chicha (200, ids 1 y 3, precios 4200 y 2200)", "request": { "method": "GET", "url": "{{baseUrl}}/bebidas?nombre=Chicha" } },
+    { "name": "03 Obtener bebida 2 (200)", "request": { "method": "GET", "url": "{{baseUrl}}/bebidas/2" } },
+    { "name": "04 Obtener bebida inexistente (404)", "request": { "method": "GET", "url": "{{baseUrl}}/bebidas/999" } },
+    { "name": "05 Crear bebida valida (201 + Location, precio 4200)", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "url": "{{baseUrl}}/bebidas",
+      "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"Terremoto\",\n  \"tipo\": \"ALCOHOLICA\",\n  \"volumenML\": 500,\n  \"stock\": 30,\n  \"gradosAlcohol\": 10.5,\n  \"certificada\": false\n}" } } },
+    { "name": "06 Crear bebida invalida (400, campos)", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "url": "{{baseUrl}}/bebidas",
+      "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"\",\n  \"volumenML\": 50,\n  \"stock\": -1\n}" } } },
+    { "name": "07 Crear SIN_ALCOHOL con grados (400, gradosAlcohol y azucarPorLitro)", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "url": "{{baseUrl}}/bebidas",
+      "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"Jugo\",\n  \"tipo\": \"SIN_ALCOHOL\",\n  \"volumenML\": 500,\n  \"stock\": 10,\n  \"gradosAlcohol\": 5\n}" } } },
+    { "name": "08 Actualizar Mote con Huesillo (200)", "request": { "method": "PUT", "header": [{ "key": "Content-Type", "value": "application/json" }], "url": "{{baseUrl}}/bebidas/4",
+      "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"Mote con Huesillo\",\n  \"tipo\": \"SIN_ALCOHOL\",\n  \"volumenML\": 400,\n  \"stock\": 45,\n  \"azucarPorLitro\": 85\n}" } } },
+    { "name": "09 Actualizar inexistente (404)", "request": { "method": "PUT", "header": [{ "key": "Content-Type", "value": "application/json" }], "url": "{{baseUrl}}/bebidas/999",
+      "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"X\",\n  \"tipo\": \"SIN_ALCOHOL\",\n  \"volumenML\": 400,\n  \"stock\": 1,\n  \"azucarPorLitro\": 10\n}" } } },
+    { "name": "10 Venta autorizada Pisco Sour x2 (201, total 7000)", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "url": "{{baseUrl}}/ventas",
+      "body": { "mode": "raw", "raw": "{ \"bebidaId\": 2, \"unidades\": 2 }" } } },
+    { "name": "11 Venta Pisco Sour x5 (409 LIMITE_EXCEDIDO)", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "url": "{{baseUrl}}/ventas",
+      "body": { "mode": "raw", "raw": "{ \"bebidaId\": 2, \"unidades\": 5 }" } } },
+    { "name": "12 Venta Chicha alcoholica (409 VENTA_RESTRINGIDA)", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "url": "{{baseUrl}}/ventas",
+      "body": { "mode": "raw", "raw": "{ \"bebidaId\": 1, \"unidades\": 1 }" } } },
+    { "name": "13 Venta Chicha sin alcohol x5 (201, sin limite, total 11000)", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "url": "{{baseUrl}}/ventas",
+      "body": { "mode": "raw", "raw": "{ \"bebidaId\": 3, \"unidades\": 5 }" } } },
+    { "name": "14 Venta mas que el stock (409 STOCK_INSUFICIENTE)", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "url": "{{baseUrl}}/ventas",
+      "body": { "mode": "raw", "raw": "{ \"bebidaId\": 4, \"unidades\": 500 }" } } },
+    { "name": "15 Venta de bebida inexistente (404)", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "url": "{{baseUrl}}/ventas",
+      "body": { "mode": "raw", "raw": "{ \"bebidaId\": 999, \"unidades\": 1 }" } } },
+    { "name": "16 Historial (200, incluye rechazadas)", "request": { "method": "GET", "url": "{{baseUrl}}/ventas" } },
+    { "name": "17 Restringir Pisco Sour (200, ventaRestringida true)", "request": { "method": "PATCH", "url": "{{baseUrl}}/bebidas/2/restriccion" } },
+    { "name": "18 Restringir inexistente (404)", "request": { "method": "PATCH", "url": "{{baseUrl}}/bebidas/999/restriccion" } },
+    { "name": "19 Eliminar Terremoto creada en 05 (204)", "request": { "method": "DELETE", "url": "{{baseUrl}}/bebidas/5" } },
+    { "name": "20 Eliminar inexistente (404)", "request": { "method": "DELETE", "url": "{{baseUrl}}/bebidas/999" } },
+    { "name": "21 Eliminar bebida con ventas (409 BEBIDA_CON_VENTAS)", "request": { "method": "DELETE", "url": "{{baseUrl}}/bebidas/2" } }
+  ]
+}
